@@ -13,7 +13,12 @@ variable "tags" {
   type        = map(string)
 }
 
-variable "cloudfront_distribution_arn" {
-  description = "CloudFront distribution ARN"
+variable "origin_domain_name" {
+  description = "Origin domain name"
+  type        = string
+}
+
+variable "cf_logs_bucket_domain_name" {
+  description = "Cloudfront logs bucket domain name"
   type        = string
 }
