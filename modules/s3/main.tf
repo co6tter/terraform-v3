@@ -10,7 +10,7 @@ terraform {
 }
 
 resource "aws_s3_bucket" "this" {
-  bucket        = "${var.project}-${var.env}"
+  bucket        = local.bucket_name
   force_destroy = true
   tags          = var.tags
 }
@@ -55,64 +55,33 @@ resource "aws_s3_bucket_lifecycle_configuration" "tiering" {
   }
 }
 
-# resource "aws_s3_bucket_ownership_controls" "this" {
-#   bucket = aws_s3_bucket.this.id
-#   rule {
-#     # 他のアカウントからアップロードされたオブジェクトも完全制御
-#     # 意図しないACL設定を防止
-#     object_ownership = "BucketOwnerEnforced"
-#   }
-# }
+resource "aws_s3_bucket_ownership_controls" "this" {
+  bucket = aws_s3_bucket.this.id
+  rule {
+    # 他のアカウントからアップロードされたオブジェクトも完全制御
+    # 意図しないACL設定を防止
+    object_ownership = "BucketOwnerEnforced"
+  }
+}
 
-# resource "aws_s3_bucket_policy" "this_cf" {
-#   bucket = aws_s3_bucket.this.id
-#   policy = data.aws_iam_policy_document.allow_cf.json
-# }
+resource "aws_s3_bucket" "cf_logs" {
+  bucket        = "${aws_s3_bucket.this.id}-cf-logs"
+  force_destroy = true
+  tags = {
+    Project = aws_s3_bucket.this.id
+    Purpose = "cloudfront-logs"
+  }
+}
 
 
-# resource "aws_s3_bucket" "cf_logs" {
-#   bucket        = "${aws_s3_bucket.this.id}-cf-logs"
-#   force_destroy = true
-#   tags = {
-#     Project = aws_s3_bucket.this.id
-#     Purpose = "cloudfront-logs"
-#   }
-# }
+resource "aws_s3_bucket_ownership_controls" "cf_logs" {
+  bucket = aws_s3_bucket.cf_logs.id
+  rule { object_ownership = "BucketOwnerPreferred" }
+}
 
-# resource "aws_s3_bucket_ownership_controls" "cf_logs" {
-#   bucket = aws_s3_bucket.cf_logs.id
-#   rule { object_ownership = "BucketOwnerPreferred" }
-# }
+resource "aws_s3_bucket_acl" "cf_logs_acl" {
+  bucket     = aws_s3_bucket.cf_logs.id
+  acl        = "log-delivery-write"
+  depends_on = [aws_s3_bucket_ownership_controls.cf_logs]
+}
 
-# resource "aws_s3_bucket_acl" "cf_logs_acl" {
-#   bucket     = aws_s3_bucket.cf_logs.id
-#   acl        = "log-delivery-write"
-#   depends_on = [aws_s3_bucket_ownership_controls.cf_logs]
-# }
-
-# data "aws_iam_policy_document" "cf_log_write" {
-#   statement {
-#     sid    = "AWSLogDeliveryWrite"
-#     effect = "Allow"
-
-#     principals {
-#       type        = "Service"
-#       identifiers = ["delivery.logs.amazonaws.com"]
-#     }
-
-#     actions   = ["s3:PutObject"]
-#     resources = ["${aws_s3_bucket.cf_logs.arn}/*"]
-
-#     # LogDelivery は必ずこの ACL を付与
-#     condition {
-#       test     = "StringEquals"
-#       variable = "s3:x-amz-acl"
-#       values   = ["bucket-owner-full-control"]
-#     }
-#   }
-# }
-
-# resource "aws_s3_bucket_policy" "cf_logs" {
-#   bucket = aws_s3_bucket.cf_logs.id
-#   policy = data.aws_iam_policy_document.cf_log_write.json
-# }
