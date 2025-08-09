@@ -9,3 +9,8 @@ variable "region" {
   type        = string
   default     = "ap-northeast-1"
 }
+
+variable "repo" {
+  description = "GitHub Repository"
+  type        = string
+}
