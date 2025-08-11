@@ -15,5 +15,5 @@ output "cf_distribution_id" {
 
 output "github_deploy_role_arn" {
   description = "IAM role ARN assumed by GitHub Actions"
-  value       = aws_iam_role.github_deploy.arn
+  value       = module.github_oidc.github_deploy_role_arn
 }

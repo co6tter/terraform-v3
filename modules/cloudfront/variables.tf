@@ -22,3 +22,15 @@ variable "cf_logs_bucket_domain_name" {
   description = "Cloudfront logs bucket domain name"
   type        = string
 }
+
+variable "price_class" {
+  description = "CloudFront price class"
+  type        = string
+  default     = "PriceClass_100"
+}
+
+variable "geo_restriction_type" {
+  description = "CloudFront geo restriction type"
+  type        = string
+  default     = "none"
+}
