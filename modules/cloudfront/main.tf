@@ -1,20 +1,9 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.92"
-    }
-  }
-
-  required_version = ">= 1.12.0"
-}
 
 resource "aws_cloudfront_origin_access_control" "this" {
   name                              = "${var.project}-${var.env}-oac"
   origin_access_control_origin_type = "s3"
   signing_behavior                  = "always"
   signing_protocol                  = "sigv4"
-
 }
 
 data "aws_cloudfront_cache_policy" "optimized" {
@@ -97,11 +86,11 @@ resource "aws_cloudfront_distribution" "this" {
   # price_class = "PriceClass_200"
   # 最も高価（全世界のエッジロケーション）
   # price_class = "PriceClass_All"
-  price_class = "PriceClass_100"
+  price_class = var.price_class
 
   restrictions {
     geo_restriction {
-      restriction_type = "none"
+      restriction_type = var.geo_restriction_type
     }
   }
 
@@ -151,4 +140,6 @@ resource "aws_cloudfront_distribution" "this" {
     response_code         = 500
     error_caching_min_ttl = 120
   }
+
+  tags = var.tags
 }
