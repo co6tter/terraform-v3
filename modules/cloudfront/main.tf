@@ -6,10 +6,6 @@ resource "aws_cloudfront_origin_access_control" "this" {
   signing_protocol                  = "sigv4"
 }
 
-data "aws_cloudfront_cache_policy" "optimized" {
-  name = "Managed-CachingOptimized"
-}
-
 # resource "aws_cloudfront_function" "security_headers" {
 #   name    = "${var.project}-${var.env}-sec-headers"
 #   runtime = "cloudfront-js-1.0"
@@ -68,7 +64,7 @@ resource "aws_cloudfront_distribution" "this" {
     # }
 
     # マネージドポリシー
-    cache_policy_id = data.aws_cloudfront_cache_policy.optimized.id
+    cache_policy_id = "658327ea-f89d-4fab-a63d-7e88639e58f6" # Managed-CachingOptimized
 
     # 旧式スタイル
     # クエリもCookieも転送しない (静的コンテンツ向け)
