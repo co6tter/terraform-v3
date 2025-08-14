@@ -23,6 +23,8 @@ module "cloudfront" {
   project                    = local.project
   env                        = local.env
   tags                       = local.tags
+  basic_auth_username        = var.basic_auth_username
+  basic_auth_password        = var.basic_auth_password
   origin_domain_name         = module.s3.bucket_regional_domain
   cf_logs_bucket_domain_name = module.s3.cf_logs_bucket_domain
 }

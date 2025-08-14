@@ -21,16 +21,16 @@ data "aws_cloudfront_cache_policy" "optimized" {
 #   )
 # }
 
-# resource "aws_cloudfront_function" "basic_auth" {
-#   name    = "${var.project}-${var.env}-basic-auth"
-#   runtime = "cloudfront-js-1.0"
-#   publish = true
+resource "aws_cloudfront_function" "basic_auth" {
+  name    = "${var.project}-${var.env}-basic-auth"
+  runtime = "cloudfront-js-1.0"
+  publish = true
 
-#   code = templatefile(
-#     "${path.module}/templates/basic_auth.js.tftpl",
-#     { token = local.basic_auth_token }
-#   )
-# }
+  code = templatefile(
+    "${path.module}/templates/basic_auth.js.tftpl",
+    { token = local.basic_auth_token }
+  )
+}
 
 resource "aws_cloudfront_distribution" "this" {
   enabled             = true
@@ -57,10 +57,10 @@ resource "aws_cloudfront_distribution" "this" {
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
 
-    # function_association {
-    #   event_type   = "viewer-request"
-    #   function_arn = aws_cloudfront_function.basic_auth.arn
-    # }
+    function_association {
+      event_type   = "viewer-request"
+      function_arn = aws_cloudfront_function.basic_auth.arn
+    }
 
     # function_association {
     #   event_type   = "viewer-response"
