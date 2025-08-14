@@ -27,3 +27,8 @@ output "cf_logs_bucket_name" {
   description = "Cloudfront logs bucket name"
   value       = aws_s3_bucket.cf_logs.id
 }
+
+output "cf_logs_bucket_acl" {
+  description = "CloudFront logs bucket ACL resource for dependency management"
+  value       = aws_s3_bucket_acl.cf_logs_acl
+}

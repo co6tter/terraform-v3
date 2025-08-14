@@ -27,6 +27,8 @@ module "cloudfront" {
   basic_auth_password        = var.basic_auth_password
   origin_domain_name         = module.s3.bucket_regional_domain
   cf_logs_bucket_domain_name = module.s3.cf_logs_bucket_domain
+
+  depends_on = [module.s3.cf_logs_bucket_acl]
 }
 
 resource "aws_s3_bucket_policy" "main_cf" {
