@@ -34,3 +34,15 @@ variable "geo_restriction_type" {
   type        = string
   default     = "none"
 }
+
+variable "basic_auth_username" {
+  description = "Basic Auth username"
+  type        = string
+  sensitive   = true
+}
+
+variable "basic_auth_password" {
+  description = "Basic Auth password"
+  type        = string
+  sensitive   = true
+}
