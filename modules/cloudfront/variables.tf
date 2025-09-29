@@ -46,3 +46,14 @@ variable "basic_auth_password" {
   type        = string
   sensitive   = true
 }
+
+variable "acm_certificate_arn" {
+  description = "ACM certificate ARN"
+  type        = string
+}
+
+variable "aliases" {
+  description = "Aliases"
+  type        = list(string)
+  default     = []
+}

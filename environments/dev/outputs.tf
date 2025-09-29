@@ -3,9 +3,9 @@ output "bucket_name" {
   value       = module.s3.bucket_name
 }
 
-output "cf_domain" {
+output "cf_domain_name" {
   description = "CloudFront domain name"
-  value       = module.cloudfront.cloudfront_domain
+  value       = module.cloudfront.cloudfront_domain_name
 }
 
 output "cf_distribution_id" {

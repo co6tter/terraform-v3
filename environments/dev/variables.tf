@@ -26,3 +26,14 @@ variable "basic_auth_password" {
   type        = string
   sensitive   = true
 }
+
+variable "root_domain" {
+  description = "Root domain"
+  type        = string
+}
+
+variable "subdomain" {
+  description = "Subdomain"
+  type        = string
+  default     = "docs"
+}
