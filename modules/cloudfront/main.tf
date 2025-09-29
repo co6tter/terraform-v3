@@ -92,19 +92,17 @@ resource "aws_cloudfront_distribution" "this" {
 
   # カスタムドメイン名（独自ドメイン）では使用できない
   # カスタムドメインを使用したい場合は、代わりにACM証明書やIAM証明書を設定する必要がある
-  viewer_certificate {
-    cloudfront_default_certificate = true
-  }
-
-  # aliases = [var.domain_name]
-
   # viewer_certificate {
-  #   acm_certificate_arn      = aws_acm_certificate.cert.arn
-  #   ssl_support_method       = "sni-only"
-  #   minimum_protocol_version = "TLSv1.2_2021"
+  #   cloudfront_default_certificate = true
   # }
 
-  # depends_on = [aws_acm_certificate_validation.cert]
+  aliases = var.aliases
+
+  viewer_certificate {
+    acm_certificate_arn      = var.acm_certificate_arn
+    ssl_support_method       = "sni-only"
+    minimum_protocol_version = "TLSv1.2_2021"
+  }
 
   # 403 → error.html (200) を 60 秒キャッシュ
   custom_error_response {

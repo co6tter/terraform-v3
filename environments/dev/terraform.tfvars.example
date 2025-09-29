@@ -3,3 +3,4 @@ region =
 repo =
 basic_auth_username =
 basic_auth_password =
+root_domain=
